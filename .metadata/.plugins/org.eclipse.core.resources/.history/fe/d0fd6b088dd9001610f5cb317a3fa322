@@ -1,0 +1,24 @@
+
+public class Passenger extends Thread {
+	boolean aToB;
+	static int num = 1;
+	Monitor mt;
+	String name;
+
+	Pass(Monitor mt,boolean aToB){
+        name = "pass"+num++ +(aToB?"(A to B)":"(B to A)");
+        super.setName(name);
+        this.mt=mt;
+        this.aToB = aToB;        
+    }
+
+	public void run() {
+		if (aToB) {
+			mt.taketA();
+			mt.leavetB();
+		} else {
+			mt.taketB();
+			mt.leavetA();
+		}
+	}
+}

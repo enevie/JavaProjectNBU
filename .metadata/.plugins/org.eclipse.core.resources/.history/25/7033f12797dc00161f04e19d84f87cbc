@@ -1,0 +1,46 @@
+import java.io.*;
+import java.net.*;
+import java.util.concurrent.CountDownLatch;
+
+class PassangerService extends Thread {
+
+	private Socket socket;
+	private BufferedReader input;
+	private PrintWriter output;
+	private Monitor monitor;
+	private CountDownLatch cs;
+
+	public PassangerService(Socket s, Monitor monitor) throws IOException {
+		this.socket = s;
+		this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		this.output = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+		this.monitor = monitor;
+		this.cs = new CountDownLatch(1);
+		start();
+	}
+
+	public void run() {
+		boolean directionSofia;
+		try {
+			while (true) {
+				String leftToRight = input.readLine();
+				if (leftToRight.equalsIgnoreCase("Sofia"))
+					directionSofia = true;
+				else
+					directionSofia = false;
+				(new Passenger(monitor, directionSofia, output)).start();
+				
+				
+				
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				socket.close();
+			} catch (IOException e) {
+			}
+		}
+	}
+}

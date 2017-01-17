@@ -1,0 +1,33 @@
+import java.io.PrintWriter;
+import java.util.concurrent.CountDownLatch;
+
+public class Passenger extends Thread {
+	boolean SofiaToBourgas;
+	static int num = 1;
+	private PrintWriter output;
+	private CountDownLatch countWatch;
+	Monitor monitor;
+	private String name;
+
+	Passenger(Monitor monitor, boolean SofiaToBourgas,CountDownLatch countWatch) {
+		name = "Passanger" + num++ + (SofiaToBourgas ? " (Sofia to Bourgas)" : "(Bourgas to Sofia)");
+		super.setName(name);
+		this.monitor = monitor;
+		this.countWatch = countWatch;
+		this.SofiaToBourgas = SofiaToBourgas;
+	}
+
+	public void run() {
+		if (output != null)
+			output.println(name + "");
+
+		if (SofiaToBourgas) {
+			monitor.taketA();
+			monitor.leavetB();
+		} else {
+			monitor.taketB();
+			monitor.leavetA();
+		}
+		countWatch.countDown();
+	}
+}

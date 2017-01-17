@@ -1,0 +1,16 @@
+import java.util.*;
+
+public class Circ {
+	public static void main(String arg[]) {
+
+		Scanner sc = new Scanner(System.in);
+		Monitor monitor = new Monitor(2);
+		Train train = new Train(monitor);
+
+		(new Server(monitor, train)).start();
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+		}
+	}
+}

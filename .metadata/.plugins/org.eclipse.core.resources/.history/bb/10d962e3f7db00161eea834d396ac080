@@ -1,0 +1,32 @@
+import java.io.PrintWriter;
+
+public class Passenger extends Thread {
+	boolean SofiaToBourgas;
+	static int num = 1;
+	private PrintWriter output;
+	Monitor monitor;
+	String name;
+
+	Passenger(Monitor monitor, boolean SofiaToBourgas, PrintWriter output) {
+		name = "Passanger" + num++ + (SofiaToBourgas ? " (Sofia to Bourgas)" : "(Bourgas to Sofia)");
+		super.setName(name);
+		this.output = output;
+		this.monitor = monitor;
+		this.SofiaToBourgas = SofiaToBourgas;
+	}
+
+	public void run() {
+		if (output != null)
+			output.println(
+					name + (SofiaToBourgas ? " Passanger from Sofia to Bourgas" : " Passanger from Bourgas to Sofia")
+							+ " bought a ticket.");
+
+		if (SofiaToBourgas) {
+			monitor.taketA();
+			monitor.leavetB();
+		} else {
+			monitor.taketB();
+			monitor.leavetA();
+		}
+	}
+}

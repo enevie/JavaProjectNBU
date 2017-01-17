@@ -1,0 +1,37 @@
+import java.io.*;
+import java.net.*;
+
+public class Server extends Thread {
+
+	private static final int PORT = 8080;
+	private ServerSocket sock = null;
+	private Monitor monitor;
+	private Train train;
+
+	Server(Monitor monitor, Train train) {
+		this.monitor = monitor;
+		this.train = train;
+	}
+
+	public void run() {
+		try {
+			sock = new ServerSocket(PORT);
+			System.out.println("Server Started");
+			train.start();
+
+			while (true) {
+				Socket socket = sock.accept();
+				try {
+					new PassangerService(socket, monitor);
+				} catch (IOException e) {
+					socket.close();
+				}
+			}
+		} catch (Exception ioe) {
+		}
+		try {
+			sock.close();
+		} catch (Exception ioe) {
+		}
+	}
+}
